@@ -1,25 +1,52 @@
-import logo from './logo.svg';
-import './App.css';
+import {useState} from 'react';
+import './App.css'
 
-function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+const App = ()=>{
+
+  const apiKey = '4b97b8828fa2646615e9a92aee1fefa4';
+
+  const [weatherData,setWeateherData] = useState([{}]);
+  const [city,setCity] = useState('');
+
+  const getWeather = (event)=>{
+    if(event.key === 'Enter'){
+      fetch(`https://api.openweathermap.org/data/2.5/weather?q=${city}&appid=${apiKey}`)
+      .then(respuesta => respuesta.json())
+      .then(data => {
+        setWeateherData(data)
+        setCity('')
+      })
+    }
+  }
+
+
+  return(
+    <div className='container'>
+      <input 
+      className='input' 
+      placeholder='Enter City...'
+      onChange = {e => setCity(e.target.value)}
+      value={city}
+      onKeyPress = {getWeather}
+      />
+      {typeof weatherData.main == 'undefined' ? (
+        <div>
+          <p>Welcome to wheather app! Enter a city to get the weather of.</p>
+        </div>
+      ):(
+        <div className='weather-data'>
+          <p className='city'>{weatherData.name} {weatherData.sys.country}</p>
+          <p className='temp'>{(Math.round(weatherData.main.temp)-273.15).toFixed(2)}°C</p>
+          <p className='weather'>{weatherData.weather[0].main}</p>
+        </div>
+      )}  
+      {weatherData.cod === '404' ? (
+        <p>City not found.</p>
+      ):(
+        <>
+        </>
+      )}
     </div>
   );
-}
-
+};
 export default App;
