@@ -30,7 +30,7 @@ const App = ()=>{
       onKeyPress = {getWeather}
       />
       {typeof weatherData.main == 'undefined' ? (
-        <div>
+        <div className = 'letters'>
           <p>Welcome to wheather app! Enter a city to get the weather of.</p>
         </div>
       ):(
